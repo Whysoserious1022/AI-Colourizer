@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Colorization - Transform Black & White to Color</title>
+    <meta name="description" content="Automatically colorize black and white images using deep learning and AI">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="12" fill="url(#gradient1)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28C15.5817 28 12 24.4183 12 20Z" fill="white" fill-opacity="0.2"/>
+                    <circle cx="20" cy="20" r="4" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient1" x1="0" y1="0" x2="40" y2="40">
+                            <stop stop-color="#667eea"/>
+                            <stop offset="1" stop-color="#764ba2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1>AI Colorizer</h1>
+            </div>
+            <p class="tagline">Transform black & white images into vibrant color using deep learning</p>
+        </header>
+
+        <!-- Upload Section -->
+        <section class="upload-section glass-card">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="32" r="32" fill="url(#uploadGradient)" fill-opacity="0.1"/>
+                        <path d="M32 20V44M20 32H44" stroke="url(#uploadGradient)" stroke-width="3" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="uploadGradient" x1="0" y1="0" x2="64" y2="64">
+                                <stop stop-color="#667eea"/>
+                                <stop offset="1" stop-color="#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h2>Upload Your Image</h2>
+                <p>Drag and drop or click to browse</p>
+                <p class="file-types">Supports: JPG, PNG, BMP, TIFF, WEBP</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <button class="btn-primary" id="browseBtn">
+                    <span>Browse Files</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Processing Indicator -->
+        <div class="processing-indicator" id="processingIndicator">
+            <div class="spinner"></div>
+            <p>Colorizing your image with AI magic...</p>
+        </div>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>Colorization Results</h2>
+                <button class="btn-secondary" id="downloadBtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 14L6 10H8V4H12V10H14L10 14Z" fill="currentColor"/>
+                        <path d="M4 16H16V18H4V16Z" fill="currentColor"/>
+                    </svg>
+                    <span>Download Colorized</span>
+                </button>
+            </div>
+
+            <div class="comparison-container">
+                <!-- Before Image -->
+                <div class="image-card glass-card">
+                    <div class="image-label">Original</div>
+                    <div class="image-wrapper">
+                        <img id="originalImage" src="" alt="Original grayscale image">
+                    </div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="arrow-separator">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="24" fill="url(#arrowGradient)"/>
+                        <path d="M20 18L26 24L20 30" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="arrowGradient" x1="0" y1="0" x2="48" y2="48">
+                                <stop stop-color="#667eea"/>
+                                <stop offset="1" stop-color="#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+
+                <!-- After Image -->
+                <div class="image-card glass-card">
+                    <div class="image-label colorized">Colorized</div>
+                    <div class="image-wrapper">
+                        <img id="colorizedImage" src="" alt="AI colorized image">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Try Another Button -->
+            <div class="action-footer">
+                <button class="btn-outline" id="resetBtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 10C4 6.68629 6.68629 4 10 4C13.3137 4 16 6.68629 16 10C16 13.3137 13.3137 16 10 16C6.68629 16 4 13.3137 4 10Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M10 6V10L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Try Another Image</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="feature-card glass-card">
+                <div class="feature-icon">🎨</div>
+                <h3>AI-Powered</h3>
+                <p>Uses state-of-the-art deep learning models trained on millions of images</p>
+            </div>
+            <div class="feature-card glass-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast Processing</h3>
+                <p>Get colorized results in seconds with optimized neural networks</p>
+            </div>
+            <div class="feature-card glass-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Privacy First</h3>
+                <p>All processing happens locally - your images never leave your device</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by OpenCV Deep Learning & Caffe Models</p>
+            <p class="credit">Based on "Colorful Image Colorization" by Zhang et al.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
